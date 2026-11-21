@@ -1,0 +1,1647 @@
+
+SOFTWARE REQUIREMENTS SPECIFICATION
+ShopNext
+E-Commerce Platform (Web Storefront, User Dashboard and Admin Console)
+
+
+
+Field
+
+
+Details
+
+
+Document Version
+
+
+1.0 (Draft for Review)
+
+
+Date
+
+
+20 November 2026
+
+
+Document Standard
+
+
+Structured per IEEE 830 / ISO/IEC/IEEE 29148 conventions
+
+
+Source Material
+
+
+ShopNext UI design board (8 screen groups plus component library)
+
+
+Status
+
+
+Draft, pending stakeholder approval
+
+Table of Contents
+TOC \h \o "1-2"
+
+
+Revision History
+
+
+
+Version
+
+
+Date
+
+
+Author
+
+
+Description
+
+
+0.1
+
+
+20 Nov 2026
+
+
+Business Analysis
+
+
+Initial extraction of requirements from UI design
+
+
+1.0
+
+
+20 Nov 2026
+
+
+Business Analysis
+
+
+First complete draft for stakeholder review
+
+1. Introduction
+1.1 Purpose
+This Software Requirements Specification (SRS) defines the functional and non-functional requirements of ShopNext, an online retail platform. It is derived from the supplied UI design board, which covers the landing page, product listing, product details, shopping cart, checkout, authentication, user dashboard, admin dashboard and a shared component library. The document is intended for product owners, designers, developers, QA engineers and project managers, and serves as the baseline for design, development, testing and acceptance.
+1.2 Scope
+ShopNext enables customers to discover, evaluate and purchase products across categories such as Electronics, Fashion, Home & Living, Beauty, Sports and Toys & Games. It provides a customer-facing storefront and account area, and an administrative console for managing products, orders, users, analytics and marketing.
+In scope:
+Customer storefront: browsing, search, filtering, product detail, wishlist, cart, checkout and order tracking
+Authentication and account management (email/password and social login)
+User dashboard with order history, wishlist, address and settings management
+Admin dashboard with KPIs, revenue analytics, product, order and user management and marketing tools
+Reusable UI component library with light/dark theme support
+Out of scope (for this release):
+Native mobile applications (the web application shall be responsive)
+Multi-vendor marketplace and seller onboarding
+Warehouse management and logistics carrier integration beyond shipment status updates
+Customer support chat and ticketing
+1.3 Definitions, Acronyms and Abbreviations
+
+
+
+Term
+
+
+Definition
+
+
+SRS
+
+
+Software Requirements Specification
+
+
+SKU
+
+
+Stock Keeping Unit, a unique product variant identifier
+
+
+COD
+
+
+Cash on Delivery
+
+
+UPI
+
+
+Unified Payments Interface, an instant bank-to-bank payment system
+
+
+KPI
+
+
+Key Performance Indicator
+
+
+PCI-DSS
+
+
+Payment Card Industry Data Security Standard
+
+
+RBAC
+
+
+Role-Based Access Control
+
+
+WCAG
+
+
+Web Content Accessibility Guidelines
+
+
+OAuth 2.0
+
+
+Industry-standard authorization protocol used for social login
+
+
+Skeleton
+
+
+Placeholder UI shown while content is loading
+
+1.4 References
+ShopNext UI design board (provided image): screens 1 to 8 and Components
+IEEE Std 830-1998, Recommended Practice for Software Requirements Specifications
+ISO/IEC/IEEE 29148:2018, Requirements Engineering
+WCAG 2.2, Web Accessibility Guidelines
+PCI-DSS v4.0
+1.5 Document Conventions
+Requirements are uniquely identified (e.g., FR-CART-03). The keyword "shall" denotes a mandatory requirement. Priority is rated High (H), Medium (M) or Low (L). H means required for launch; M means important but may be deferred; L means desirable.
+2. Overall Description
+2.1 Product Perspective
+ShopNext is a new, standalone web platform composed of a responsive single-page storefront, a backend REST/GraphQL API, a relational database, and integrations with third-party payment gateways, identity providers, email/SMS services and shipping providers. The UI follows a modern dark theme with indigo/violet accents, glass-style cards and a persistent navigation bar, and the design includes a theme toggle.
+2.2 Product Functions (Summary)
+Landing page with hero banner, value propositions (free shipping, easy returns, secure payment) and top categories
+Product listing with filters (category, price range, colour, brand), sorting, grid/list view and pagination
+Product details with image gallery, ratings, variants, pricing, discounts, add-to-cart and buy-now
+Shopping cart with quantity management, order summary and recommendations
+Three-step checkout: shipping, payment, review, with multiple payment methods
+Login/registration with social sign-in and password recovery
+User dashboard: order statistics, recent orders, wishlist, addresses, settings and promotional offers
+Admin dashboard: revenue, orders, active users, conversion rate, top products, and CRUD modules
+2.3 User Classes and Characteristics
+
+
+
+User Class
+
+
+Description
+
+
+Technical Expertise
+
+
+Guest Visitor
+
+
+Unauthenticated user who can browse, search and view products and use a guest cart
+
+
+Low
+
+
+Registered Customer
+
+
+Authenticated user who can purchase, track orders, manage wishlist, profile and addresses
+
+
+Low
+
+
+Administrator
+
+
+Staff user who manages catalogue, orders, users, marketing and settings, and views analytics
+
+
+Medium
+
+
+Super Administrator
+
+
+Manages admin accounts, roles, permissions and system settings
+
+
+High
+
+2.4 Operating Environment
+Browsers: latest two versions of Chrome, Edge, Firefox and Safari; mobile Safari and Chrome
+Devices: desktop, tablet and mobile (responsive breakpoints: 360, 768, 1024, 1440 px)
+Server: cloud-hosted (containerised) Linux environment with managed relational database and object storage
+2.5 Design and Implementation Constraints
+The UI shall conform to the provided design: dark theme default, component library and navigation patterns
+Payment card data shall never be stored on ShopNext servers; a PCI-DSS compliant gateway shall be used
+Payment methods shall support the Indian market (UPI) as well as cards, PayPal and COD, as depicted in the checkout screen
+Currency display is USD in the mock-ups; multi-currency support shall be configurable
+2.6 Assumptions and Dependencies
+Third-party services (payment gateway, OAuth providers, email/SMS, shipping) are available and contracted
+Product content (images, descriptions, specifications) is supplied by the business
+Tax rules are configurable by region; the mock-up shows a tax line in the cart and order summary
+Free shipping threshold is $50 as shown on the landing page and is configurable
+3. System Features and Functional Requirements
+Each subsection corresponds to a screen group in the UI design board.
+3.1 Landing Page (Screen 1)
+Description: The entry point presenting the brand, a promotional hero banner, trust badges and top categories.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-LAND-01
+
+
+The system shall display a global navigation bar with logo, menus (Shop, Categories, Deals, About), search field, wishlist icon, notification icon and user avatar/profile menu.
+
+
+H
+
+
+FR-LAND-02
+
+
+The system shall display a hero section with headline, sub-headline, a "Shop Now" primary call-to-action and a "Watch Video" secondary action that opens a video modal.
+
+
+H
+
+
+FR-LAND-03
+
+
+The hero banner content (title, text, image, CTA link) shall be configurable by administrators.
+
+
+M
+
+
+FR-LAND-04
+
+
+The system shall show a value-proposition strip: Free Shipping (on orders over $50), Easy Returns (30 days return) and Secure Payment (100% secure).
+
+
+M
+
+
+FR-LAND-05
+
+
+The system shall display a "Top Categories" section with category cards (Electronics, Fashion, Home & Living, Beauty, Sports, Toys & Games) and a "View all" link.
+
+
+H
+
+
+FR-LAND-06
+
+
+Selecting a category card shall navigate to the product listing pre-filtered to that category.
+
+
+H
+
+
+FR-LAND-07
+
+
+The nav search field shall provide auto-suggestions after two or more characters.
+
+
+M
+
+3.2 Product Listing (Screen 2)
+Description: A filterable, sortable catalogue of products in grid or list view.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-PLP-01
+
+
+The system shall display a result count (e.g., "Showing 1-12 of 324 products") reflecting the active filters.
+
+
+H
+
+
+FR-PLP-02
+
+
+The system shall provide a filter panel with: Category (checkbox with product counts), Price Range (dual-handle slider with Apply button), Color (swatches) and Brand (checkbox list).
+
+
+H
+
+
+FR-PLP-03
+
+
+The system shall support sorting by Popularity, Price (low-high, high-low), Newest and Rating.
+
+
+H
+
+
+FR-PLP-04
+
+
+The system shall offer a toggle between grid and list layouts and remember the user's choice during the session.
+
+
+M
+
+
+FR-PLP-05
+
+
+Each product card shall show image, name, short description, current price, original price (struck through), rating with review count, discount badge (e.g., "-20%"), wishlist (heart) icon and an "Add to Cart" button.
+
+
+H
+
+
+FR-PLP-06
+
+
+The system shall support pagination or infinite scroll with a loading skeleton while products load.
+
+
+H
+
+
+FR-PLP-07
+
+
+Filters shall be combinable and reflected in the URL to allow sharing and browser back/forward navigation.
+
+
+M
+
+
+FR-PLP-08
+
+
+The system shall provide a "clear all filters" action and an empty-state message when no products match.
+
+
+M
+
+
+FR-PLP-09
+
+
+Clicking the wishlist icon shall add/remove the item; guests shall be prompted to log in.
+
+
+H
+
+
+FR-PLP-10
+
+
+Clicking a product card shall open its Product Details page.
+
+
+H
+
+3.3 Product Details (Screen 3)
+Description: Detailed view of a single product with media, pricing, variants and purchase actions.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-PDP-01
+
+
+The system shall display a breadcrumb trail (Home > Category > Subcategory).
+
+
+M
+
+
+FR-PDP-02
+
+
+The system shall show an image gallery with vertical thumbnails, a large main image and zoom. Product video and 360° view shall be supported where media exists.
+
+
+H
+
+
+FR-PDP-03
+
+
+The system shall show product title, average rating, review count, current price, original price and discount percentage badge.
+
+
+H
+
+
+FR-PDP-04
+
+
+The discount percentage shall be calculated automatically from original and sale price.
+
+
+H
+
+
+FR-PDP-05
+
+
+The system shall show a short product summary and allow selection of variants (colour swatches, size, etc.) which update price, images and stock status.
+
+
+H
+
+
+FR-PDP-06
+
+
+The system shall provide a quantity selector (minimum 1, maximum limited by available stock) and "Add to Cart" and "Buy Now" buttons. "Buy Now" shall bypass the cart and go directly to checkout.
+
+
+H
+
+
+FR-PDP-07
+
+
+The system shall show service highlights (e.g., Free Shipping, 2-Year Warranty, Easy Returns) configurable per product.
+
+
+M
+
+
+FR-PDP-08
+
+
+The system shall provide tabs for Description, Reviews (with count) and Specifications.
+
+
+H
+
+
+FR-PDP-09
+
+
+Authenticated customers who purchased the product shall be able to submit a rating (1-5) and review text; reviews shall be moderated by administrators.
+
+
+M
+
+
+FR-PDP-10
+
+
+The system shall provide wishlist toggle and show out-of-stock and low-stock indicators.
+
+
+M
+
+3.4 Shopping Cart (Screen 4)
+Description: Review and modification of items before checkout.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-CART-01
+
+
+The cart shall list each item with thumbnail, name, variant, unit price, quantity stepper (+/-) and remove (trash) icon.
+
+
+H
+
+
+FR-CART-02
+
+
+Changing quantity or removing an item shall update line totals and the order summary immediately without a full page reload.
+
+
+H
+
+
+FR-CART-03
+
+
+The Order Summary shall show Subtotal, Shipping, Tax and Total, and shall recalculate on every change.
+
+
+H
+
+
+FR-CART-04
+
+
+Shipping shall be free when the subtotal meets the configured threshold; otherwise a shipping fee shall be calculated.
+
+
+H
+
+
+FR-CART-05
+
+
+The system shall provide a "Proceed to Checkout" primary button and a "Continue Shopping" link.
+
+
+H
+
+
+FR-CART-06
+
+
+The system shall show a "You may also like" recommendation carousel with a "View all" link, based on cart contents and browsing history.
+
+
+M
+
+
+FR-CART-07
+
+
+The cart shall persist for logged-in users across devices and for guests via browser storage, and shall merge on login.
+
+
+H
+
+
+FR-CART-08
+
+
+The system shall validate stock and price at checkout and notify the user of any changes.
+
+
+H
+
+
+FR-CART-09
+
+
+The system shall support promo/coupon codes. (Not shown in UI; recommended addition.)
+
+
+L
+
+3.5 Checkout (Screen 5)
+Description: A three-step checkout flow (Shipping, Payment, Review) with a persistent order summary.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-CHK-01
+
+
+The system shall display a progress stepper with three steps: 1 Shipping, 2 Payment, 3 Review.
+
+
+H
+
+
+FR-CHK-02
+
+
+Shipping step: the user shall select a saved address or add a new address ("Add New Address") and edit an existing one.
+
+
+H
+
+
+FR-CHK-03
+
+
+The address form shall capture name, phone, street, city, state, postal code and country, with validation.
+
+
+H
+
+
+FR-CHK-04
+
+
+Payment step: the system shall support Credit/Debit Card (Visa, Mastercard, etc.), UPI, PayPal and Cash on Delivery, presented as selectable radio options.
+
+
+H
+
+
+FR-CHK-05
+
+
+Card details shall be collected via the payment gateway's hosted fields/tokenisation; card numbers shall not touch ShopNext servers.
+
+
+H
+
+
+FR-CHK-06
+
+
+Review step: the system shall display the full order (items, address, payment method, totals) for final confirmation.
+
+
+H
+
+
+FR-CHK-07
+
+
+The Order Summary panel shall remain visible and show items, subtotal, shipping, and total.
+
+
+H
+
+
+FR-CHK-08
+
+
+The "Place Order" action shall create the order atomically, reduce inventory, initiate payment and display a confirmation page with order number.
+
+
+H
+
+
+FR-CHK-09
+
+
+The system shall send an order confirmation by email (and SMS where enabled).
+
+
+H
+
+
+FR-CHK-10
+
+
+Payment failures shall be handled gracefully with a retry option and without duplicate orders (idempotency).
+
+
+H
+
+
+FR-CHK-11
+
+
+COD availability shall be configurable by region and order value.
+
+
+M
+
+
+FR-CHK-12
+
+
+Guest checkout shall be supported with optional account creation.
+
+
+M
+
+3.6 Authentication (Screen 6)
+Description: Login and registration experience with benefits messaging.
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-AUTH-01
+
+
+The system shall provide a tabbed Login/Register panel with a "Welcome Back!" side panel listing benefits (personalised recommendations, order tracking, exclusive deals).
+
+
+H
+
+
+FR-AUTH-02
+
+
+Login shall accept email and password, with show/hide password toggle and a "Sign In" button.
+
+
+H
+
+
+FR-AUTH-03
+
+
+Registration shall collect name, email and password (with strength indicator) and require acceptance of Terms and Privacy Policy.
+
+
+H
+
+
+FR-AUTH-04
+
+
+The system shall provide "Forgot Password?" via a time-limited emailed reset link.
+
+
+H
+
+
+FR-AUTH-05
+
+
+The system shall support social sign-in with Google, Apple and Facebook (OAuth 2.0 / OpenID Connect).
+
+
+M
+
+
+FR-AUTH-06
+
+
+The system shall verify email addresses on registration.
+
+
+M
+
+
+FR-AUTH-07
+
+
+Accounts shall be temporarily locked after five consecutive failed login attempts; CAPTCHA may be applied.
+
+
+H
+
+
+FR-AUTH-08
+
+
+Sessions shall use secure, HTTP-only tokens with configurable expiry and a "Logout" action that invalidates the session.
+
+
+H
+
+
+FR-AUTH-09
+
+
+Optional multi-factor authentication shall be available to administrators (mandatory) and customers (optional).
+
+
+M
+
+3.7 User Dashboard (Screen 7)
+Description: Self-service account area with a sidebar (Dashboard, Orders, Wishlist, Addresses, Settings, Logout).
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-USR-01
+
+
+The dashboard shall show summary tiles: Total Orders, Wishlist Items and Total Spent.
+
+
+H
+
+
+FR-USR-02
+
+
+The dashboard shall show Recent Orders with product image, name, price, order date and status badge (e.g., Delivered), with a "View All" link.
+
+
+H
+
+
+FR-USR-03
+
+
+The Orders page shall list all orders with filtering by status and date, order detail view, invoice download, tracking, cancellation (before shipping) and return/refund request.
+
+
+H
+
+
+FR-USR-04
+
+
+The Wishlist page shall list saved products, allowing removal and move-to-cart.
+
+
+H
+
+
+FR-USR-05
+
+
+The Addresses page shall allow adding, editing, deleting and setting a default address.
+
+
+H
+
+
+FR-USR-06
+
+
+The Settings page shall allow editing profile, changing password, notification preferences and managing saved payment tokens.
+
+
+M
+
+
+FR-USR-07
+
+
+The dashboard shall show a promotional banner (e.g., "Get 20% OFF on your next order") with CTA, managed from the admin console.
+
+
+L
+
+
+FR-USR-08
+
+
+A Dark Mode toggle shall switch the theme and persist the preference per user.
+
+
+M
+
+3.8 Admin Dashboard (Screen 8)
+Description: Administrative console with sidebar (Dashboard, Products, Orders, Users, Analytics, Marketing, Settings, Logout).
+
+
+
+ID
+
+
+Requirement
+
+
+Priority
+
+
+FR-ADM-01
+
+
+The dashboard shall show KPI cards with trend indicators: Total Revenue, Total Orders, Active Users and Conversion Rate.
+
+
+H
+
+
+FR-ADM-02
+
+
+The dashboard shall show a Revenue Overview line chart with selectable periods (1M, 3M, 1Y) and tooltips.
+
+
+H
+
+
+FR-ADM-03
+
+
+The dashboard shall list Top Products with image, name and revenue.
+
+
+M
+
+
+FR-ADM-04
+
+
+Products module: create, read, update, delete and bulk import/export of products, categories, brands, variants, images, pricing, discounts and stock.
+
+
+H
+
+
+FR-ADM-05
+
+
+Orders module: list/search/filter orders, view details, update status (Pending, Processing, Shipped, Delivered, Cancelled, Returned), print invoices and process refunds.
+
+
+H
+
+
+FR-ADM-06
+
+
+Users module: view, search, activate/deactivate customers; manage admin accounts and roles (RBAC).
+
+
+H
+
+
+FR-ADM-07
+
+
+Analytics module: sales, traffic, conversion funnel, customer cohorts and inventory reports with CSV/PDF export.
+
+
+M
+
+
+FR-ADM-08
+
+
+Marketing module: manage banners, coupons, promotions, email campaigns and featured categories.
+
+
+M
+
+
+FR-ADM-09
+
+
+Settings module: store details, tax, shipping rules, payment gateways, email templates and currency.
+
+
+H
+
+
+FR-ADM-10
+
+
+The console shall provide global search, notification bell and admin profile menu.
+
+
+M
+
+
+FR-ADM-11
+
+
+All admin actions affecting data shall be recorded in an audit log.
+
+
+H
+
+3.9 Shared UI Component Library
+Description: Reusable components shown on the design board shall be implemented once and reused across screens.
+
+
+
+Component
+
+
+Requirement
+
+
+Navbar
+
+
+Responsive; collapses to hamburger menu on mobile; shows cart count badge; sticky on scroll.
+
+
+Search
+
+
+Auto-suggest, recent searches, keyboard navigation.
+
+
+Product Card
+
+
+Image, pricing, rating, badge, wishlist, add-to-cart; hover state and skeleton.
+
+
+Category Card
+
+
+Icon/image with label; keyboard-focusable link.
+
+
+Review Card
+
+
+Reviewer, rating, date, verified-purchase tag, review text, helpful votes.
+
+
+Modal
+
+
+Accessible dialog with focus trap, ESC to close, overlay click behaviour.
+
+
+Toast
+
+
+Non-blocking success, error, warning and info notifications with auto-dismiss.
+
+
+Dropdown
+
+
+Keyboard accessible menus and selects.
+
+
+Loading Skeleton
+
+
+Placeholder shimmer for cards, lists and tables to avoid layout shift.
+
+
+Form
+
+
+Inline validation, error messages, labels and helper text.
+
+
+Pagination
+
+
+Page numbers, next/previous, page-size selector.
+
+
+Theme Toggle
+
+
+Switches between dark and light themes; honours system preference by default.
+
+4. External Interface Requirements
+4.1 User Interfaces
+Visual style: dark theme with deep navy/black backgrounds, indigo-violet gradient primary buttons, rounded cards, subtle glow and glass effects
+Typography: a clean sans-serif family with clear hierarchy (hero, headings, body, captions)
+Layout: 12-column responsive grid; sidebars collapse on smaller screens
+Status colours: green for success/delivered, amber for pending/warnings, red for errors
+All interactive elements shall have hover, focus, active and disabled states
+4.2 Hardware Interfaces
+No direct hardware interfaces. The application shall run in standard web browsers on user devices and support touch input.
+4.3 Software Interfaces
+
+
+
+Interface
+
+
+Purpose
+
+
+Protocol
+
+
+Payment Gateway
+
+
+Card, UPI, PayPal payment processing and refunds
+
+
+HTTPS REST, webhooks
+
+
+Identity Providers
+
+
+Google, Apple, Facebook login
+
+
+OAuth 2.0 / OIDC
+
+
+Email Service
+
+
+Transactional and marketing email
+
+
+SMTP / API
+
+
+SMS Service
+
+
+OTP and order notifications
+
+
+HTTPS API
+
+
+Shipping Provider
+
+
+Rates, label generation, tracking
+
+
+HTTPS REST
+
+
+Analytics
+
+
+Behavioural analytics and conversion tracking
+
+
+JS SDK
+
+
+Object Storage / CDN
+
+
+Product images, static assets
+
+
+HTTPS
+
+4.4 Communications Interfaces
+All communication shall use HTTPS (TLS 1.2 or higher). The backend shall expose a versioned REST API with JSON payloads; WebSockets or server-sent events may be used for real-time admin notifications.
+5. Non-Functional Requirements
+5.1 Performance
+
+
+
+ID
+
+
+Requirement
+
+
+NFR-PERF-01
+
+
+Largest Contentful Paint shall be 2.5 seconds or less on a 4G connection for landing, listing and product pages.
+
+
+NFR-PERF-02
+
+
+API responses shall be 300 ms or less at the 95th percentile for read operations under normal load.
+
+
+NFR-PERF-03
+
+
+The system shall support at least 5,000 concurrent users and scale horizontally.
+
+
+NFR-PERF-04
+
+
+Search results shall be returned in 500 ms or less for the 95th percentile.
+
+
+NFR-PERF-05
+
+
+Images shall be served via CDN in modern formats (WebP/AVIF) with lazy loading.
+
+5.2 Security
+
+
+
+ID
+
+
+Requirement
+
+
+NFR-SEC-01
+
+
+Passwords shall be hashed using bcrypt/Argon2 with salt; never stored in plain text.
+
+
+NFR-SEC-02
+
+
+The system shall protect against OWASP Top 10 risks including XSS, CSRF, SQL injection and broken access control.
+
+
+NFR-SEC-03
+
+
+Role-based access control shall be enforced server-side for all admin functions.
+
+
+NFR-SEC-04
+
+
+Payment processing shall comply with PCI-DSS (via tokenisation / hosted payment fields).
+
+
+NFR-SEC-05
+
+
+Personal data shall be encrypted in transit (TLS) and at rest (AES-256).
+
+
+NFR-SEC-06
+
+
+Rate limiting and bot protection shall be applied to login, registration and checkout endpoints.
+
+5.3 Reliability and Availability
+The platform shall target 99.9% monthly uptime excluding planned maintenance
+Automated daily database backups with 30-day retention; RPO of 15 minutes or less and RTO of 4 hours or less
+Graceful degradation when third-party services are unavailable
+5.4 Usability and Accessibility
+The UI shall conform to WCAG 2.2 Level AA, including keyboard navigation, screen-reader labels and sufficient colour contrast in both dark and light themes
+The checkout shall be completable in three steps with clear inline error messages
+The UI shall be fully responsive from 360 px width upward
+5.5 Maintainability and Portability
+Code shall follow a modular architecture with automated tests (unit coverage of 80% or more for business logic)
+CI/CD pipeline with automated build, test and deployment
+Configuration (currency, tax, shipping, payment methods) shall be changeable without code deployment
+5.6 Localisation
+The system shall support multiple languages and currencies, locale-specific date/number formats and region-specific payment methods (e.g., UPI and COD).
+5.7 Legal and Compliance
+The platform shall comply with applicable data protection laws (e.g., India's DPDP Act, GDPR where applicable), consumer protection and e-commerce regulations, and shall provide cookie consent, privacy policy, terms of service and return policy pages.
+6. Data Requirements
+6.1 Key Entities
+
+
+
+Entity
+
+
+Key Attributes
+
+
+User
+
+
+id, name, email, phone, password hash, role, status, theme preference, created date
+
+
+Address
+
+
+id, user id, name, phone, line 1, line 2, city, state, postal code, country, is default
+
+
+Category
+
+
+id, name, slug, icon/image, parent id
+
+
+Brand
+
+
+id, name, logo
+
+
+Product
+
+
+id, name, description, category id, brand id, base price, sale price, rating avg, review count, status
+
+
+Product Variant
+
+
+id, product id, SKU, colour, size, price, stock quantity
+
+
+Product Image
+
+
+id, product id, URL, sort order
+
+
+Review
+
+
+id, product id, user id, rating, text, status, created date
+
+
+Wishlist Item
+
+
+user id, product id, added date
+
+
+Cart / Cart Item
+
+
+id, user/session id, variant id, quantity, unit price
+
+
+Order
+
+
+id, order number, user id, address snapshot, status, subtotal, shipping, tax, discount, total, payment status, placed date
+
+
+Order Item
+
+
+id, order id, variant id, name, unit price, quantity
+
+
+Payment
+
+
+id, order id, method, gateway reference, amount, status, timestamp
+
+
+Coupon / Promotion
+
+
+id, code, type, value, validity, usage limit
+
+
+Audit Log
+
+
+id, actor id, action, entity, before/after, timestamp
+
+6.2 Business Rules
+Order total = Subtotal + Shipping + Tax - Discount
+Discount percentage = (Original Price - Sale Price) / Original Price x 100, rounded to the nearest whole number
+Free shipping applies when the subtotal is above the configured threshold (default $50)
+Orders may be cancelled by customers only before the Shipped status
+Return window defaults to 30 days from delivery
+Stock shall be reserved at order placement and released if payment fails or the order is cancelled
+7. Key Use Cases
+UC-01: Purchase a Product
+
+
+
+Item
+
+
+Description
+
+
+Actor
+
+
+Registered Customer
+
+
+Precondition
+
+
+Customer is logged in and the product is in stock
+
+
+Main Flow
+
+
+1) Browse or search products. 2) Open product details. 3) Select variant and quantity. 4) Add to Cart. 5) Review cart and Proceed to Checkout. 6) Select shipping address. 7) Choose payment method. 8) Review order and Place Order. 9) Receive confirmation.
+
+
+Alternate Flows
+
+
+A1: Guest user is prompted to log in or continue as guest. A2: Buy Now skips the cart. A3: Payment fails and the user retries or selects another method.
+
+
+Postcondition
+
+
+Order created, inventory updated, confirmation sent
+
+UC-02: Register and Log In
+
+
+
+Item
+
+
+Description
+
+
+Actor
+
+
+Guest Visitor
+
+
+Main Flow
+
+
+1) Open Authentication page. 2) Select Register tab. 3) Enter details and submit. 4) Verify email. 5) Sign in with credentials or social provider.
+
+
+Alternate Flows
+
+
+A1: Invalid credentials show an error. A2: Forgot Password triggers a reset email.
+
+
+Postcondition
+
+
+User session established and redirected to previous page or dashboard
+
+UC-03: Manage Orders (Admin)
+
+
+
+Item
+
+
+Description
+
+
+Actor
+
+
+Administrator
+
+
+Main Flow
+
+
+1) Log in to admin console. 2) Open Orders. 3) Search or filter orders. 4) Open an order. 5) Update status or issue refund. 6) System notifies the customer.
+
+
+Postcondition
+
+
+Order status updated and audit log entry created
+
+8. Appendices
+Appendix A: Screen-to-Requirement Traceability
+
+
+
+UI Screen
+
+
+Requirement IDs
+
+
+Primary Users
+
+
+1. Landing Page
+
+
+FR-LAND-01 to 07
+
+
+Guest, Customer
+
+
+2. Product Listing
+
+
+FR-PLP-01 to 10
+
+
+Guest, Customer
+
+
+3. Product Details
+
+
+FR-PDP-01 to 10
+
+
+Guest, Customer
+
+
+4. Shopping Cart
+
+
+FR-CART-01 to 09
+
+
+Guest, Customer
+
+
+5. Checkout
+
+
+FR-CHK-01 to 12
+
+
+Customer, Guest
+
+
+6. Authentication
+
+
+FR-AUTH-01 to 09
+
+
+Guest
+
+
+7. User Dashboard
+
+
+FR-USR-01 to 08
+
+
+Customer
+
+
+8. Admin Dashboard
+
+
+FR-ADM-01 to 11
+
+
+Administrator
+
+
+Components
+
+
+Section 3.9
+
+
+All
+
+Appendix B: Open Issues and Design Observations
+The following inconsistencies were noted in the UI mock-ups and should be resolved with the design team before development:
+Product Details shows $349 against $390 with a "13% OFF" badge, but the actual discount is about 10.5%. The system shall calculate the badge automatically (FR-PDP-04).
+The Checkout order summary shows the product name "Sony WH-1000XM5 Wireless Headphones" ($349) with a smartwatch image, while the cart contains three different items. Product images and names must be bound to the same data source.
+The Cart screen shows the Nike product subtitle as "Running Soees" (typo); UI copy should be proofread.
+The Cart tax of $70.16 on a subtotal of $877 (about 8%) implies a fixed tax rate; the tax rules (inclusive vs exclusive, regional rates) must be confirmed.
+Checkout lists UPI and COD alongside PayPal and Visa, which implies India and international markets; supported regions and currencies need confirmation.
+Admin dashboard Y-axis labels on the revenue chart repeat ("16k" appears twice), which should be corrected in the final design.
+No UI is shown for order confirmation, order detail, returns/refunds, coupon entry, search results, 404/error pages, or the admin Products/Orders/Users list screens. These are included as recommended requirements and need design.
+Appendix C: Recommended Release Phasing
+
+
+
+Phase
+
+
+Scope
+
+
+Phase 1 (MVP)
+
+
+Landing, listing, details, cart, checkout (card, COD), authentication, user dashboard (orders, addresses), admin (products, orders, users, KPIs)
+
+
+Phase 2
+
+
+Social login, UPI/PayPal, reviews, wishlist enhancements, coupons, analytics, marketing module
+
+
+Phase 3
+
+
+Personalised recommendations, MFA for customers, multi-language/currency, advanced reporting
